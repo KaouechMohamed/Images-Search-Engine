@@ -1,6 +1,26 @@
 version: '3'
 
 services:
+
+  init_es_data:
+    image: alpine
+    container_name: init_es_data
+    volumes:
+      - es_data:/backup_volume  
+      - ./es_data_backup_2024-10-26.tgz:/backup/es_data_backup.tgz
+    command: >
+      sh -c "if [ -z \"$(ls -A /backup_volume)\" ]; then
+               echo 'Restoring backup to es_data volume...';
+               tar -xzf /backup/es_data_backup.tgz -C /backup_volume;
+               echo 'Restoration complete.';
+             else
+               echo 'es_data volume already populated, skipping restore.';
+             fi"
+    networks:
+      - search
+    deploy:
+      replicas: 0 
+      
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.2
     container_name: elasticsearch
@@ -18,8 +38,8 @@ services:
 
   middleware_app:
     build:
-      context: ./services
-      dockerfile: Dockerfile.main 
+      context: ./services/api
+      dockerfile: Dockerfile
     container_name: middleware
     ports:
       - "5000:5000"  
@@ -36,10 +56,10 @@ services:
     networks:
       - search
   
-  ingest-app:
+  ingest_app:
     build:
-      context: ./services
-      dockerfile: Dockerfile.ingest 
+      context: ./services/ingest
+      dockerfile: Dockerfile
     container_name: ingest
     depends_on:
       - elasticsearch

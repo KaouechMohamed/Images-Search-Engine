@@ -69,19 +69,19 @@ if __name__ == "__main__":
     create_elastic_index(es,index)
     #extrat features 
     extractor=FeatureExtractor()
-    for i in range(0,9):
-        folder_path = os.path.join(os.path.dirname(__file__),'data', f'{i}')
-        #loop through images and extract features
-        for img_file in os.listdir(folder_path):
-            img_path = os.path.join(folder_path, img_file)
-            try:
-                # Load image using PIL
-                img = Image.open(img_path)
-                # Extract feature vector
-                feature_vector = extractor.extract(img)
-                #encode image to base64
-                imgb64=imgageToBase64(img_path)
-                # Index image path and feature vector into Elasticsearch
-                index_image_data(es, index, imgb64, feature_vector)
-            except Exception as e:
-                logging.error(f"Error processing image {img_path}: {e}")
+    #for i in range(0,9):
+    folder_path = os.path.join(os.path.dirname(__file__),'data')
+    #loop through images and extract features
+    for img_file in os.listdir(folder_path):
+        img_path = os.path.join(folder_path, img_file)
+        try:
+            # Load image using PIL
+            img = Image.open(img_path)
+            # Extract feature vector
+            feature_vector = extractor.extract(img)
+            #encode image to base64
+            imgb64=imgageToBase64(img_path)
+            # Index image path and feature vector into Elasticsearch
+            index_image_data(es, index, imgb64, feature_vector)
+        except Exception as e:
+            logging.error(f"Error processing image {img_path}: {e}")

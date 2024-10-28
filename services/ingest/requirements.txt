@@ -1,7 +1,5 @@
 tensorflow
 numpy
-Flask
-Flask-Cors
 pillow
 elasticsearch
 requests
