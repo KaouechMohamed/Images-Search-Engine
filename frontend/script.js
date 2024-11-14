@@ -58,7 +58,7 @@ function handleFiles(files) {
 }
 
 searchBtn.addEventListener('click', () => {
-    const apiUrl = 'http://localhost:5000/api/search';
+    const apiUrl = 'http://middleware:5000/api/search';
 
     if (!uploadedImageFile) {
         alert('Please upload an image file before searching.');
